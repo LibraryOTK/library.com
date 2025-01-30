@@ -3,22 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Corridor</title>
-    <link rel="stylesheet" href="style.css">
+    <title>3D Library Corridor</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
 </head>
 <body>
-    <div class="scene">
-        <div class="corridor">
-            <!-- Left Side Doors -->
-            <div class="door left" style="top: 100px;">Fiction</div>
-            <div class="door left" style="top: 300px;">Thriller</div>
-            <div class="door left" style="top: 500px;">Mystery</div>
-            
-            <!-- Right Side Doors -->
-            <div class="door right" style="top: 200px;">History</div>
-            <div class="door right" style="top: 400px;">Science</div>
-            <div class="door right" style="top: 600px;">Biography</div>
-        </div>
-    </div>
+    <script type="module">
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
+        import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+
+        // Scene, Camera, Renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Floor
+        const floorGeometry = new THREE.PlaneGeometry(50, 200);
+        const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x888888, side: THREE.DoubleSide });
+        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+        floor.rotation.x = -Math.PI / 2;
+        scene.add(floor);
+
+        // Walls
+        const wallMaterial = new THREE.MeshBasicMaterial({ color: 0xaaaaaa, side: THREE.DoubleSide });
+        const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(10, 200), wallMaterial);
+        leftWall.position.set(-25, 5, 0);
+        leftWall.rotation.y = Math.PI / 2;
+        scene.add(leftWall);
+
+        const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(10, 200), wallMaterial);
+        rightWall.position.set(25, 5, 0);
+        rightWall.rotation.y = -Math.PI / 2;
+        scene.add(rightWall);
+
+        const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(50, 200), wallMaterial);
+        ceiling.position.set(0, 10, 0);
+        ceiling.rotation.x = Math.PI / 2;
+        scene.add(ceiling);
+
+        // Doors
+        const doorMaterial = new THREE.MeshBasicMaterial({ color: 0x8B0000, side: THREE.DoubleSide });
+        const createDoor = (x, z, label) => {
+            const door = new THREE.Mesh(new THREE.PlaneGeometry(6, 12), doorMaterial);
+            door.position.set(x, 6, z);
+            scene.add(door);
+        };
+
+        let zPosition = -20;
+        const categories = ["Fiction", "Thriller", "Mystery", "History", "Science", "Biography", "Fantasy"];
+        categories.forEach((category, index) => {
+            createDoor(-24, zPosition, category);
+            createDoor(24, zPosition, category);
+            zPosition -= 25;
+        });
+
+        // Camera position
+        camera.position.set(0, 5, 10);
+        
+        // Controls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableZoom = false;
+        controls.enableRotate = false;
+        controls.enablePan = false;
+
+        // Smooth scrolling effect
+        let scrollY = 0;
+        document.addEventListener('wheel', (event) => {
+            scrollY += event.deltaY * 0.1;
+            camera.position.z = Math.max(Math.min(scrollY, 10), -180);
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
 </body>
 </html>
