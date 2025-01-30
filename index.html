@@ -23,21 +23,5 @@
     </div>
     <!-- You can add more doors here as needed -->
   </div>
-  <script>
-  // Adjust 3D corridor movement based on scroll
-  let scrollPosition = 0;
-
-  window.addEventListener('scroll', () => {
-    scrollPosition = window.scrollY;
-
-    // Modify the transformation of the corridor doors
-    const doors = document.querySelectorAll('.door');
-    doors.forEach((door, index) => {
-      // Adjust Z-position based on scroll
-      const zOffset = 1000 + index * 200 - scrollPosition / 2;
-      door.style.transform = `translateZ(${zOffset}px) rotateY(${index * 15}deg)`;
-    });
-  });
-</script>
 </body>
 </html>
