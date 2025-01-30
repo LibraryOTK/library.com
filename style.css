@@ -1,34 +1,64 @@
-body {
+/* General Page Settings */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
     background-color: black;
-    color: white;
-    font-family: Arial, sans-serif;
 }
 
-.corridor {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 90vw;
+/* 3D Scene */
+.scene {
+    width: 100vw;
     height: 100vh;
-    align-items: center;
+    perspective: 1000px; /* Creates 3D effect */
 }
 
+/* Corridor Walls */
+.corridor {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    transform-style: preserve-3d;
+    transform: translateZ(-500px); /* Moves the whole corridor into depth */
+}
+
+/* Corridor Floor */
+.corridor::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 50vh;
+    bottom: 0;
+    background: linear-gradient(to bottom, #555, black);
+    transform: rotateX(90deg);
+}
+
+/* Left & Right Walls */
 .door {
-    width: 150px;
-    height: 300px;
-    background-color: brown; /* Temporary door color */
-    color: white;
+    position: absolute;
+    width: 120px;
+    height: 250px;
+    background: url('wooden-door.jpg') no-repeat center center;
+    background-size: cover;
+    border: 3px solid #FFF;
     text-align: center;
-    line-height: 300px;
-    font-size: 20px;
-    border: 5px solid #FFF;
-    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Left Wall Doors */
 .left {
-    margin-left: 10vw;
+    left: -300px;
+    transform: rotateY(90deg);
 }
 
+/* Right Wall Doors */
 .right {
-    margin-right: 10vw;
+    right: -300px;
+    transform: rotateY(-90deg);
 }
