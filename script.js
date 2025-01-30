@@ -1,13 +1,6 @@
-let scrollPosition = 0;
+let positionZ = -500; // Starting depth
 
-window.addEventListener('scroll', () => {
-  scrollPosition = window.scrollY;
-
-  // Adjust door placement dynamically
-  const doors = document.querySelectorAll('.door');
-  doors.forEach((door, index) => {
-    const zOffset = 1200 + (index * 200) - (scrollPosition / 2);
-    const yRotation = (index % 2 === 0 ? -15 : 15); // Alternate rotation for left and right
-    door.style.transform = `translateZ(${zOffset}px) rotateY(${yRotation}deg)`;
-  });
+document.addEventListener("wheel", (event) => {
+    positionZ += event.deltaY * 0.5; // Move forward or backward
+    document.querySelector(".corridor").style.transform = `translateZ(${positionZ}px)`;
 });
